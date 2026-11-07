@@ -37,21 +37,6 @@ struct dynamic_bitset {
         for (size_t i=0;i<m;i++)
             datas.push_back(0);
     }
-    dynamic_bitset &clean(){
-        if (lens==0) {
-            datas.clear();return *this;
-        }
-        size_t m=(lens>>6);
-        if ((lens&MOD)!=0){
-            m++;
-            datas.resize(m);
-            datas[m-1]&=((bas<<(lens&MOD))-1);
-        }
-        else{
-            datas.resize(m);
-        }
-        return *this;
-    }
     /**
      * @brief从一个字符串初始化bitset。
      * 保证字符串合法，且最低位在最前面。
@@ -108,7 +93,6 @@ struct dynamic_bitset {
                 datas[lens>>6]&=(~(bas << (lens&63)));
         }
         lens++;
-        clean();
         return *this;
     }
 
@@ -167,7 +151,7 @@ struct dynamic_bitset {
             temp &= ((bas << (newlen&MOD))-1);
             datas[m] |= temp;
         }
-        clean();
+        
         return *this;
     }
     // 与操作，返回自身的引用。     a &= b 即a = a & b
@@ -182,7 +166,7 @@ struct dynamic_bitset {
             temp |= (~((bas << (newlen&MOD))-1));
             datas[m] &= temp;
         }
-        clean();
+        
         return *this;
     }
     // 异或操作，返回自身的引用。   a ^= b 即a = a ^ b
@@ -197,7 +181,7 @@ struct dynamic_bitset {
             temp &= ((bas << (newlen&MOD))-1);
             datas[m] ^= temp;
         }
-        clean();
+        
         return *this;
     }
 
@@ -244,7 +228,7 @@ struct dynamic_bitset {
             }
         }
         lens=lens+n;
-        clean();
+        
         return *this;
     }
     /**
@@ -283,7 +267,7 @@ struct dynamic_bitset {
             datas.resize(st+1);
         }
         lens-=n;
-        clean();
+        
         return *this;
     }
 
@@ -306,7 +290,7 @@ struct dynamic_bitset {
             datas[i] =(~datas[i]);
         }
         if ((lens&MOD)!=0){
-            datas[m] =(~(datas[m]&((bas<<(lens&MOD))-1)));
+            datas[m] =((~datas[m])&((bas<<(lens&MOD))-1));
         }
         return *this;
     }
